@@ -9,7 +9,7 @@ This cookbook is compatible with tarball bundled versions of logstash (>= 1.4.0)
 # Requirements
 
 - java (will be installed automatically)
-- runit capable system (will be installed automaticall)
+- runit capable system (will be installed automatically)
 
 # Usage
 
