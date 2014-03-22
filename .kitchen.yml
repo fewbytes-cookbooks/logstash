@@ -1,0 +1,20 @@
+---
+driver:
+  name: ec2
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-12.04
+  - name: centos-6.4
+
+suites:
+  - name: default
+    run_list:
+      - recipe[apt]
+      - recipe[logstash::default]
+    attributes:
+      logstash:
+        kibana:
+          enabled: true

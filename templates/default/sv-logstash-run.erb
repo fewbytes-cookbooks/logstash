@@ -1,0 +1,30 @@
+#!/bin/bash
+<% logstash_dir = ::File.join(node["ark"]["prefix_home"], "logstash") -%>
+
+exec 2>&1
+
+LS_HEAP_SIZE="<%= node["logstash"]["heap_size"] %>"
+JAVA_OPTS="$JAVA_OPTS -Xmx${LS_HEAP_SIZE}"
+JAVA_OPTS="$JAVA_OPTS -XX:+UseParNewGC"
+JAVA_OPTS="$JAVA_OPTS -XX:+UseConcMarkSweepGC"
+JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true"
+JAVA_OPTS="$JAVA_OPTS -XX:CMSInitiatingOccupancyFraction=75"
+JAVA_OPTS="$JAVA_OPTS -XX:+UseCMSInitiatingOccupancyOnly"
+export JAVA_OPTS="<%= node["logstash"]["java_opts"].values.join(" ") %>"
+export HOME_SINCEDB_DIR="<%= node["logstash"]["home"] %>"
+
+LOGSTASH_DIR="<%= logstash_dir %>"
+export GEM_HOME="$LOGSTASH_DIR/vendor/bundle/jruby/1.9"
+export GEM_PATH="<%= node["logstash"]["gem_path"].values.join(":") %>"
+export RUBYLIB="$LOGSTASH_DIR/lib:<%= ::File.join(node["ark"]["prefix_home"], "logstash-contrib", "lib") %>"
+
+<% if node["logstash"]["kibana"]["enabled"] -%>
+WEB_ARGS="web -p <%= node["logstash"]["kibana"]["port"] %>"
+<% end -%>
+
+AGENT_ARGS="agent -f <%= node["logstash"]["conf_dir"] %> -w <%= node["logstash"]["filterworkers"] %>"
+AGENT_ARGS="$AGENT_ARGS <%= node["logstash"]["plugin_dirs"].values.map{|p_dir| "--pluginpath #{p_dir}" }.join(" ") %>"
+
+cd <%= node["logstash"]["home"] %>
+
+exec chpst -u <%= node["logstash"]["user"] %>:<%= node["logstash"]["group"] %> -U <%= node["logstash"]["user"] %>:<%= node["logstash"]["group"] %> java $JAVA_OPTS -jar $LOGSTASH_DIR/vendor/jar/jruby-complete-*.jar $LOGSTASH_DIR/lib/logstash/runner.rb $WEB_ARGS -- $AGENT_ARGS
