@@ -6,25 +6,12 @@
 # 
 # Apache V2
 
+Chef::Application.fatal!("install_type must be package or tarball") unless ["tarball", "package"].include? node["logstash"]["install_type"]
+
 include_recipe "java"
 include_recipe "runit"
-include_recipe "ark"
 
-
-ark "logstash" do
-	url node["logstash"]["tarball"]["url"]
-	checksum node["logstash"]["tarball"]["checksum"]
-	version node["logstash"]["tarball"]["version"]
-	has_binaries ["bin/logstash"]
-	action :install
-end
-
-ark "logstash-contrib" do
-	url node["logstash"]["contrib_tarball"]["url"]
-	checksum node["logstash"]["contrib_tarball"]["checksum"]
-	version node["logstash"]["contrib_tarball"]["version"]
-	action :install
-end
+include_recipe "logstash::install_#{node["logstash"]["install_type"]}"
 
 directory node["logstash"]["conf_dir"] do
 	mode "0755"

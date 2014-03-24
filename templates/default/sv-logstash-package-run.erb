@@ -1,0 +1,17 @@
+#!/bin/bash
+exec 2>&1
+
+LS_HEAP_SIZE="<%= node["logstash"]["heap_size"] %>"
+export JAVA_OPTS="<%= node["logstash"]["java_opts"].values.join(" ") %>"
+export HOME_SINCEDB_DIR="<%= node["logstash"]["home"] %>"
+
+<% if node["logstash"]["kibana"]["enabled"] -%>
+WEB_ARGS="web -p <%= node["logstash"]["kibana"]["port"] %>"
+<% end -%>
+
+AGENT_ARGS="agent -f <%= node["logstash"]["conf_dir"] %> -w <%= node["logstash"]["filterworkers"] %>"
+AGENT_ARGS="$AGENT_ARGS <%= node["logstash"]["plugin_dirs"].values.map{|p_dir| "--pluginpath #{p_dir}" }.join(" ") %>"
+
+cd <%= node["logstash"]["home"] %>
+
+exec chpst -u <%= node["logstash"]["user"] %>:<%= node["logstash"]["group"] %> -U <%= node["logstash"]["user"] %>:<%= node["logstash"]["group"] %> /opt/logstash/bin/logstash $WEB_ARGS -- $AGENT_ARGS

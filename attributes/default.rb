@@ -1,11 +1,19 @@
 include_attribute "ark"
 
+default["logstash"]["install_type"] = "package"
+
 default["logstash"]["tarball"]["url"] = "https://download.elasticsearch.org/logstash/logstash/logstash-1.4.0.tar.gz"
 default["logstash"]["tarball"]["version"] = "1.4.0"
 default["logstash"]["tarball"]["checksum"] = "ab62394bb56da10cb20ee106badf22734402b21435977ec4f9aa65257627c629"
 default["logstash"]["contrib_tarball"]["url"] = "http://download.elasticsearch.org/logstash/logstash/logstash-contrib-1.4.0.tar.gz"
 default["logstash"]["contrib_tarball"]["checksum"] = "23aa397a7832d6e3553eba8360ff5d4ccfff98aac1e4a1b8201c21755e8d77c9"
 default["logstash"]["contrib_tarball"]["version"] = "1.4.0"
+
+# package repositories
+default["logstash"]["apt_repository"]["gpg_key_url"] = "http://packages.elasticsearch.org/GPG-KEY-elasticsearch"
+default["logstash"]["apt_repository"]["url"] = "http://packages.elasticsearch.org/logstash/1.4/debian"
+default["logstash"]["yum_repository"]["gpg_key_url"] = "http://packages.elasticsearch.org/GPG-KEY-elasticsearch"
+default["logstash"]["yum_repository"]["url"] = "http://packages.elasticsearch.org/logstash/1.4/centos"
 
 default["logstash"]["user"] = "logstash"
 default["logstash"]["group"] = "logstash"

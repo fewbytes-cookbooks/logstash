@@ -9,3 +9,5 @@ version          '0.1.0'
 depends "ark"
 depends "java"
 depends "runit"
+depends "apt"
+depends "yum"

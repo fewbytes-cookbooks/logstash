@@ -5,7 +5,7 @@ describe service("logstash") do
 end
 
 describe process("java") do
-	it { should match /logstash/ }
+	its(:args) { should match /.*logstash.*/ }
 end
 
 describe user("logstash") do

@@ -6,15 +6,25 @@ provisioner:
   name: chef_solo
 
 platforms:
+  - name: ubuntu-13.04
   - name: ubuntu-12.04
-  - name: centos-6.4
-
+  - name: centos-6.5
+    driver:
+      image_id: ami-8997afe0
+      user: root
 suites:
   - name: default
     run_list:
-      - recipe[apt]
       - recipe[logstash::default]
     attributes:
       logstash:
+        kibana:
+          enabled: true
+  - name: tarball
+    run_list:
+      - recipe[logstash::default]
+    attributes:
+      logstash:
+        install_type: tarball
         kibana:
           enabled: true
