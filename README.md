@@ -29,6 +29,8 @@ When you need to get a basic config up and running without too much hassle, use 
 
 ## General
 
+- `node["logstash"]["install_type"]` - must be `tarball` or `package`, defaults to `package`. When set to `package` will install Logstash using yum or apt repositories.
+
 - `node["logstash"]["user"]` - user to run logstash as, effects directory permissions as well
 - `node["logstash"]["group"]` - group to run logstash as, effects directory permissions as well
 - `node["logstash"]["conf_dir"]` - directory for logstash configuration files
